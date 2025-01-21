@@ -306,6 +306,19 @@ n() {
     fi
 }
 
+m() {
+    if command -v mmm &>/dev/null; then
+        mmm
+        if [ -f /tmp/mmm.path ]; then
+            target_dir=$(< /tmp/mmm.path) # Read the file content into a variable
+            cd "$target_dir" || echo "Failed to cd to $target_dir"
+            rm -f /tmp/mmm.path # Delete the file
+        fi
+    else
+        echo "Command 'mmm' not found."
+    fi
+}
+
 export EDITOR="nvim"
 
 
