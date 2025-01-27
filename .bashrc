@@ -280,11 +280,11 @@ dc() {
 
 
 
-# ===================
-# === Yazi Config ===
-# ===================
+# ==================
+# === Nav Config ===
+# ==================
 
-n() {
+yazi() {
     if ! command -v yazi &>/dev/null
     then
         (
@@ -303,6 +303,26 @@ n() {
             cd -- "$cwd"
         fi
         rm -f -- "$tmp"
+    fi
+}
+
+n() {
+    if command -v mmm &>/dev/null; then
+        mmm
+        if [ -f /tmp/mmm.path ]; then
+            target_dir=$(< /tmp/mmm.path) # Read the file content into a variable
+            cd "$target_dir" || echo "Failed to cd to $target_dir"
+            rm -f /tmp/mmm.path # Delete the file
+        fi
+    else
+        (
+        set -e
+        [ "$(uname -m)" != "x86_64" ] && return 1 # Platform guard clause
+        wget -q --show-progress -O/tmp/mmm.tar.gz https://github.com/oranellis/mmm/releases/download/v0.1.1/mmm-linux-x86_64.tar.gz
+        tar -xzvf /tmp/mmm.tar.gz -C /tmp
+        mkdir -p ~/.local/bin
+        cp /tmp/mmm ~/.local/bin
+        );
     fi
 }
 
