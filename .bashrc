@@ -280,11 +280,11 @@ dc() {
 
 
 
-# ===================
-# === Yazi Config ===
-# ===================
+# ==================
+# === Nav Config ===
+# ==================
 
-n() {
+yazi() {
     if ! command -v yazi &>/dev/null
     then
         (
@@ -306,7 +306,7 @@ n() {
     fi
 }
 
-m() {
+n() {
     if command -v mmm &>/dev/null; then
         mmm
         if [ -f /tmp/mmm.path ]; then
@@ -315,7 +315,14 @@ m() {
             rm -f /tmp/mmm.path # Delete the file
         fi
     else
-        echo "Command 'mmm' not found."
+        (
+        set -e
+        [ "$(uname -m)" != "x86_64" ] && return 1 # Platform guard clause
+        wget -q --show-progress -O/tmp/mmm.tar.gz https://github.com/oranellis/mmm/releases/download/v0.1.1/mmm-linux-x86_64.tar.gz
+        tar -xzvf /tmp/mmm.tar.gz -C /tmp
+        mkdir -p ~/.local/bin
+        cp /tmp/mmm ~/.local/bin
+        );
     fi
 }
 
