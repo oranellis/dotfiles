@@ -284,7 +284,7 @@ dc() {
 # === Nav Config ===
 # ==================
 
-yazi() {
+y() {
     if ! command -v yazi &>/dev/null
     then
         (
