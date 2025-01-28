@@ -318,7 +318,7 @@ n() {
         (
         set -e
         [ "$(uname -m)" != "x86_64" ] && return 1 # Platform guard clause
-        wget -q --show-progress -O/tmp/mmm.tar.gz https://github.com/oranellis/mmm/releases/download/v0.1.1/mmm-linux-x86_64.tar.gz
+        wget -q --show-progress -O/tmp/mmm.tar.gz https://github.com/oranellis/mmm/releases/download/v0.2.0/mmm-linux-x86_64.tar.gz
         tar -xzvf /tmp/mmm.tar.gz -C /tmp
         mkdir -p ~/.local/bin
         cp /tmp/mmm ~/.local/bin
