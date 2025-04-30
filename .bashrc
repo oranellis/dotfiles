@@ -388,12 +388,7 @@ for (colnum = 0; colnum<256; colnum++) {
 # === Tmux on startup ===
 # =======================
 
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ "screen" ]] && [[ ! "$TERM" =~ "tmux" ]] && [ -z "$TMUX" ] && [[ -z $(ps -A | grep "tmux: client") ]]
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ "screen" ]] && [[ ! "$TERM" =~ "tmux" ]] && [ -z "$TMUX" ] && [[ -z $(ps -A | grep "tmux: client") ]] && [ -n "$SSH_CLIENT" ]
 then
-    if [ -n "$SSH_CLIENT" ]
-    then
-        exec tmux -f "$HOME/.tmux.ssh.conf" new -s "PID$$"
-    else
-        exec tmux new -s "PID$$"
-    fi
+    exec tmux -f "$HOME/.tmux.ssh.conf" new -s "PID$$"
 fi
