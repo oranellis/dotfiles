@@ -1,7 +1,7 @@
 * {
   border: none;
   font-family: Hack-Nerd;
-  font-size: 13px;
+  font-size: 16px;
   min-height: 0;
   color: #d3c6aa;
   opacity: 0.85;
@@ -13,11 +13,8 @@ window#waybar {
 }
 
 tooltip {
-  background: rgba(43, 48, 59, 0.5);
-  border: 1px solid rgba(100, 114, 125, 0.5);
-}
-tooltip label {
-  color: white;
+  background: #161b1e;
+  border: 1px solid #d3c6aa;
 }
 
 #clock, #battery {
@@ -25,7 +22,7 @@ tooltip label {
 }
 
 #clock {
-  font-size: 48px;
+  font-size: 64px;
 }
 
 #battery.charging {
