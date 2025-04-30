@@ -4,7 +4,7 @@
 	"layer": "bottom",
 	"position": "right",
 
-	"modules-right": ["tray", "battery", "pulseaudio", "network", "clock"],
+	"modules-right": ["tray", "backlight", "battery", "pulseaudio", "network", "clock"],
 	"margin": 14,
     "spacing": 5,
 
@@ -12,6 +12,14 @@
 		"format": "{icon}  {capacity}%",
 		"format-charging": "{icon}󱐋 {capacity}%",
 		"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+	},
+
+    "backlight": {
+		"format": "{icon}   {percent}%",
+		"format-icons": ["󰛩", "󱩎", "󱩏", "󱩐", "󱩑", "󱩒", "󱩓", "󱩔", "󱩕", "󱩖", "󰛨"],
+        "on-scroll-down": "",
+        "on-scroll-up": "",
+        "tooltip": false
 	},
 
     "network": {
@@ -25,9 +33,9 @@
     },
 
     "pulseaudio": {
-        "format": "{icon}   {volume}",
+        "format": "{icon}   {volume}%",
         "format-icons": ["", "", ""],
-        "format-bluetooth": "󰂰   {volume}",
+        "format-bluetooth": "󰂰   {volume}%",
         "format-muted": "   muted",
         "on-scroll-down": "",
         "on-scroll-up": "",
@@ -38,8 +46,8 @@
         "format": "{:%H:%M}",
         "tooltip-format": "<tt><small>{calendar}</small></tt>",
         "calendar": {
-            "mode"          : "year",
-            "mode-mon-col"  : 4,
+            "mode": "year",
+            "mode-mon-col": 4,
             "format": {
                 "months":     "<span color='#918c7e'><b>{}</b></span>",
                 "days":       "<span><b>{}</b></span>",
