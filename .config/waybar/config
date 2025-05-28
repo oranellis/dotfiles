@@ -9,8 +9,8 @@
     "spacing": 5,
 
 	"battery": {
-		"format": "{icon}  {capacity}%",
-		"format-charging": "{icon}󱐋 {capacity}%",
+		"format": "{icon}   {capacity}%",
+		"format-charging": "{icon}󱐋  {capacity}%",
 		"format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
 	},
 
