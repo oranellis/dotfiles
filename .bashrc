@@ -348,6 +348,26 @@ export EDITOR="nvim"
 
 
 
+# =========================
+# === Archive Functions ===
+# =========================
+
+archive() {
+    if [ $# -ne 2 ]
+    then
+        echo -e "requires two options: \n\tarchive [/input_path] [/output_path]\n\ncreates /output_path.tar.gz"
+        return 1
+    fi
+    if ! [ -d "$1" ]
+    then
+        echo "input path must be a valid filesystem path"
+        return 1
+    fi
+    tar cv "$1" | pv | pigz -Rc >"$2.tar.gz"
+}
+
+
+
 # ====================
 # === FZF Keybinds ===
 # ====================
