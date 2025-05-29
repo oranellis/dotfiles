@@ -144,6 +144,7 @@ alias ab=autobuild
 alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(date -I)"
 alias nd=mkdir
 alias nf=touch
+alias media="cd /run/media/$USER"
 ds() {
     returndir=$(pwd)
     if [ "$#" -gt "0" ]
