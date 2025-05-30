@@ -144,6 +144,7 @@ alias ab=autobuild
 alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(date -I)"
 alias nd=mkdir
 alias nf=touch
+alias media="cd /run/media/$USER"
 ds() {
     returndir=$(pwd)
     if [ "$#" -gt "0" ]
@@ -345,6 +346,26 @@ n() {
 }
 
 export EDITOR="nvim"
+
+
+
+# =========================
+# === Archive Functions ===
+# =========================
+
+archive() {
+    if [ $# -ne 2 ]
+    then
+        echo -e "requires two options: \n\tarchive [/input_path] [/output_path]\n\ncreates /output_path.tar.gz"
+        return 1
+    fi
+    if ! [ -d "$1" ]
+    then
+        echo "input path must be a valid filesystem path"
+        return 1
+    fi
+    tar cv "$1" | pv | pigz -Rc >"$2.tar.gz"
+}
 
 
 
