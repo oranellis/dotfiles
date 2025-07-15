@@ -347,6 +347,13 @@ n() {
 
 export EDITOR="nvim"
 
+t() {
+    if command -v alacritty >/dev/null
+    then
+        alacritty &
+    fi
+}
+
 
 
 # =========================
