@@ -347,6 +347,13 @@ n() {
 
 export EDITOR="nvim"
 
+t() {
+    if command -v alacritty >/dev/null
+    then
+        alacritty &
+    fi
+}
+
 
 
 # =========================
@@ -364,7 +371,12 @@ archive() {
         echo "input path must be a valid filesystem path"
         return 1
     fi
-    tar cv "$1" | pv | pigz -Rc >"$2.tar.gz"
+    local size
+    local src=$1
+    local dest=$2.tar.gz
+    size=$(du -sb --apparent-size --dereference "$src" 2>/dev/null | cut -f1)
+    echo "Archiving $(numfmt --to=iec --suffix=B "$size") to $dest"
+    tar -C "$(dirname "$src")" -c "$(basename "$src")" | pv ${size:+-s "$size"} | pigz -Rc >"$dest"
 }
 
 
