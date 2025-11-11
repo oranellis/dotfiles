@@ -43,7 +43,16 @@ return {
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'lua_ls' },    -- add more servers here
+      ensure_installed = {
+        'bashls',
+        'clangd',
+        'cmake',
+        'docker_language_server',
+        'lua_ls',
+        'pyright',
+        'rust_analyzer',
+
+      },
       automatic_installation = true,
     },
     dependencies = {
