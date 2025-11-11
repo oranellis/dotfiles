@@ -1,7 +1,6 @@
--- Requirements:
--- ripgrep clangd rust-analyser lua-langserver
+-- Oran's Neovim Setup 2025
 
-require('settings')
-require('filetype_specific')
-require('packages')
-require('keymaps')
+require('config.settings')
+require('config.lazy')
+require('config.theme')
+require('config.keymaps')
