@@ -12,25 +12,24 @@
 
 [[ $- != *i* ]] && return
 
+# =================
+# === Env Setup ===
+# =================
 
-# ================
-# === Env vars ===
-# ================
+# Docker
+export DOCKER_BUILDKIT=1
 
-command -v manpath >/dev/null && \
-    export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
-    export DOCKER_BUILDKIT=1
-    export SPLIT="v"
-    export LFS="/mnt/lfs"
-
-
-
-# ========================
-# === Source Env Files ===
-# ========================
-
+# Rust
 . "$HOME/.cargo/env" 2>/dev/null
+
+# Custom keys
 . "$HOME/.keys" 2>/dev/null
+
+# Node Version Manager Setup
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 
 
 
