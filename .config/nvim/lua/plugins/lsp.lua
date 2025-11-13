@@ -46,7 +46,6 @@ return {
       ensure_installed = {
         'bashls',
         'clangd',
-        'cmake',
         'docker_language_server',
         'lua_ls',
         'pyright',
