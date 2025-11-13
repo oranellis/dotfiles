@@ -160,7 +160,7 @@ dotfiles() {
     cd $(dirname $(readlink -f ~/.bashrc))
 }
 pacman-autoremove() {
-sudo pacman -Rsu $(pacman -Qdtq)
+    pacman -Qdtq | pacman -Rns -
 }
 dockerclean() {
     docker rm -f $(docker ps -aq)
