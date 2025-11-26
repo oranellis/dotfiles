@@ -129,5 +129,14 @@ return {
       vim.api.nvim_set_keymap('n', '<Leader>dd', 'neogen.generate', {noremap = true, silent = true})
       vim.keymap.set('n', '<Leader>dd', function() neogen.generate() end, {noremap = true, silent = true})
     end
+  },
+
+  -- Autopairs
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    config = true
+    -- use opts = {} for passing setup options
+    -- this is equivalent to setup({}) function
   }
 }
