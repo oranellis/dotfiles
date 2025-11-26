@@ -92,28 +92,28 @@ return {
     opts = {}
   },
 
-  -- Blink Completion
   {
     'saghen/blink.cmp',
-    dependencies = { 'rafamadriz/friendly-snippets' },
     version = '1.*',
+    -- `main` is untested, please open a PR if you've confirmed it works as expected
+    dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
     opts = {
+      snippets = { preset = 'luasnip' },
+      -- ensure you have the `snippets` source (enabled by default)
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
       keymap = {
         preset = 'none',
-        ['<Tab>'] = { 'select_next', 'fallback' },
-        ['<S-Tab>'] = { 'select_prev', 'fallback' },
-        ['<Enter>'] = { 'select_and_accept', 'fallback' }
+        ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+        ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+        ['<Enter>'] = { 'select_and_accept', 'fallback' },
+        ['<Esc>'] = { 'hide', 'cancel', 'fallback'}
       },
       appearance = {
         nerd_font_variant = 'mono'
       },
-      completion = { documentation = { auto_show = true } },
-      sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
-      },
-      fuzzy = { implementation = 'prefer_rust_with_warning' }
-    },
-    opts_extend = { 'sources.default' }
+    }
   },
 
   -- Neogen Comment Generator
@@ -122,6 +122,7 @@ return {
     version = '*',
     config = function ()
       local neogen = require('neogen')
+      neogen.setup({})
       vim.api.nvim_set_keymap('n', '<Leader>dd', 'neogen.generate', {noremap = true, silent = true})
       vim.keymap.set('n', '<Leader>dd', function() neogen.generate() end, {noremap = true, silent = true})
     end
