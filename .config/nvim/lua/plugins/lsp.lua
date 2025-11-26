@@ -122,7 +122,10 @@ return {
     version = '*',
     config = function ()
       local neogen = require('neogen')
-      neogen.setup({})
+      neogen.setup({
+        snippet_engine = 'luasnip',
+        enabled = true
+      })
       vim.api.nvim_set_keymap('n', '<Leader>dd', 'neogen.generate', {noremap = true, silent = true})
       vim.keymap.set('n', '<Leader>dd', function() neogen.generate() end, {noremap = true, silent = true})
     end
