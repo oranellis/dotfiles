@@ -1,3 +1,4 @@
 .config/gtk-3.0/bookmarks
 .config/hypr/hyprland.local.conf
+.config/nvim/lazy-lock.json
 backup/
