@@ -36,5 +36,13 @@ return {
         lualine_z = {'location'}
       }
     }
+  },
+
+  -- Whitespace Highlighting
+  {
+    'aidancz/whitespace.nvim',
+    config = function ()
+      require('whitespace').setup()
+    end
   }
 }
