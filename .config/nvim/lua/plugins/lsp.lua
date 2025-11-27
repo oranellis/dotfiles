@@ -95,11 +95,9 @@ return {
   {
     'saghen/blink.cmp',
     version = '1.*',
-    -- `main` is untested, please open a PR if you've confirmed it works as expected
     dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
     opts = {
       snippets = { preset = 'luasnip' },
-      -- ensure you have the `snippets` source (enabled by default)
       sources = {
         default = { 'lsp', 'path', 'snippets', 'buffer' },
       },
@@ -108,7 +106,7 @@ return {
         ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
         ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
         ['<Enter>'] = { 'select_and_accept', 'fallback' },
-        ['<Esc>'] = { 'hide', 'cancel', 'fallback'}
+        ['<S-BS>'] = { 'hide', 'show', 'fallback'}
       },
       appearance = {
         nerd_font_variant = 'mono'
