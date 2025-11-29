@@ -44,5 +44,15 @@ return {
     config = function ()
       require('whitespace').setup()
     end
+  },
+
+  -- Markdown Rendering
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-tree/nvim-web-devicons'
+    },
+    opts = {},
   }
 }
