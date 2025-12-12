@@ -426,11 +426,15 @@ for (colnum = 0; colnum<256; colnum++) {
 
 
 
-# =======================
-# === Tmux on startup ===
-# =======================
+# =============================
+# === Source Custom Configs ===
+# =============================
 
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ "screen" ]] && [[ ! "$TERM" =~ "tmux" ]] && [ -z "$TMUX" ] && [[ -z $(ps -A | grep "tmux: client") ]] && [ -n "$SSH_CLIENT" ]
-then
-    exec tmux -f "$HOME/.tmux.ssh.conf" new -s "PID$$"
+# Source $HOME/.bashrc.d/*.sh scripts
+
+if test -d $HOME/.bashrc.d/; then
+	for profile in $HOME/.bashrc.d/*.sh; do
+		test -r "$profile" && . "$profile"
+	done
+	unset profile
 fi
