@@ -175,6 +175,19 @@ dockernuke() {
 cdgit() {
     cd "$(git rev-parse --show-toplevel)"
 }
+fixpermissions() {
+    local dir="${1:-.}"
+    find "$dir" -type d -exec chmod 755 {} \;
+    find "$dir" -type f -exec chmod 644 {} \;
+}
+amount() {
+    if [ $# -ge 1 ]; then
+        blkdev="/dev/$(echo $1 | sed -e's/\/dev\///')"
+        udisksctl mount -b $blkdev
+    else
+        lsblk -lno NAME,SIZE,FSTYPE,MOUNTPOINT | awk '{if (NF == 3) print "\033[31m" $0 "\033[0m"; else print}'
+    fi
+}
 
 
 
