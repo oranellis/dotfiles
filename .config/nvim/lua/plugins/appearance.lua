@@ -42,7 +42,9 @@ return {
   {
     'aidancz/whitespace.nvim',
     config = function ()
-      require('whitespace').setup()
+      require('whitespace').setup({
+        excluded_buftypes = { 'terminal' },
+      })
     end
   },
 }
