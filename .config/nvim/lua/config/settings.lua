@@ -64,3 +64,6 @@ vim.opt.autoread = true
 
 -- Visual bell
 vim.opt.visualbell = true
+
+-- Folding
+vim.opt.foldmethod = 'marker'
