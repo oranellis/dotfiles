@@ -324,7 +324,6 @@ n() {
     then
         (
             set -e
-            version="v0.3.2"
             case "$(uname -m)" in
                 x86_64)
                     filename="mmm-linux-x86_64.tar.gz"
@@ -338,7 +337,7 @@ n() {
             esac
             if [ -n "$filename" ]
             then
-                wget -q --show-progress -O/tmp/mmm.tar.gz "https://github.com/oranellis/mmm/releases/download/$version/$filename"
+                wget -q --show-progress -O/tmp/mmm.tar.gz "https://github.com/oranellis/mmm/releases/latest/download/$filename"
                 tar -xzf /tmp/mmm.tar.gz -C /tmp
                 mkdir -p ~/.local/bin
                 cp /tmp/mmm ~/.local/bin
