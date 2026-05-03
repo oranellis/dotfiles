@@ -1,0 +1,48 @@
+window {
+    margin: 0px;
+    border: 3px solid #928374;
+    border-radius: 15px;
+    background-color: #282828;
+}
+
+#input {
+    margin: 5px;
+    border: none;
+    color: #ebdbb2;
+    background-color: #1d2021;
+}
+
+#inner-box {
+    margin: 5px;
+    border: none;
+    background-color: #282828;
+}
+
+#outer-box {
+    margin: 5px;
+    border: 5px solid #28282800;
+    border-radius: 15px;
+    background-color: #282828;
+}
+
+#scroll {
+    margin: 0px;
+    border: none;
+}
+
+#text {
+    margin: 5px;
+    border: none;
+    /* color: #ebdbb2; */
+}
+
+#entry {
+    font-size: 18px;
+    color: #ebdbb2;
+}
+
+#entry:selected {
+    background-color: #1d2021;
+    border: 2px solid #928374;
+    color: #a9b665;
+}
