@@ -27,6 +27,6 @@
 [commit]
 	gpgsign = true
 [alias]
-	graph = log --oneline --graph --decorate --branches
+	graph = log --oneline --graph --decorate --all
 	update = !$HOME/.config/git-update.sh
 	cleanup = !$HOME/.config/git-cleanup.sh
