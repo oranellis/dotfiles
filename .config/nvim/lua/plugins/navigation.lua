@@ -116,10 +116,8 @@ return {
           group_empty = true,
           highlight_opened_files = 'all',
         },
-        filters = {
-          custom = {
-            '.git',
-          }
+        git = {
+          ignore = false,
         },
       })
 

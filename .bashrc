@@ -144,6 +144,7 @@ alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(
 alias nd=mkdir
 alias nf=touch
 alias media="cd /run/media/$USER"
+alias trash="gio trash"
 ds() {
     returndir=$(pwd)
     if [ "$#" -gt "0" ]
@@ -187,6 +188,11 @@ amount() {
     else
         lsblk -lno NAME,SIZE,FSTYPE,MOUNTPOINT | awk '{if (NF == 3) print "\033[31m" $0 "\033[0m"; else print}'
     fi
+}
+nvimclean() {
+    rm -r ~/.cache/nvim && echo "Cleaned ~/.cache/nvim"
+    rm -rf ~/.local/share/nvim && echo "Cleaned ~/.local/share/nvim"
+    rm -r ~/.local/state/nvim && echo "Cleaned ~/.local/state/nvim"
 }
 
 
