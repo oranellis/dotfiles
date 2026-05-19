@@ -9,9 +9,9 @@
 -- "highrr" mode with auto position and scale (equivalent to monitor=,highrr,auto,auto)
 hl.monitor({
   output = "",
-  mode = "highrr",
+  mode = "preferred",
   position = "auto",
-  scale = "auto",
+  scale = "1",
 })
 
 ---------------------

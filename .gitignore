@@ -1,5 +1,5 @@
 .config/gtk-3.0/bookmarks
-.config/hypr/hyprland.local.conf
+.config/hypr/hyprlandlocal.lua
 .config/nvim/lazy-lock.json
 .vim/.netrwhist
 backup/
