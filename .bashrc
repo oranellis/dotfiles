@@ -144,6 +144,7 @@ alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(
 alias nd=mkdir
 alias nf=touch
 alias media="cd /run/media/$USER"
+alias trash="gio trash"
 ds() {
     returndir=$(pwd)
     if [ "$#" -gt "0" ]
