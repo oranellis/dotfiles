@@ -188,6 +188,11 @@ amount() {
         lsblk -lno NAME,SIZE,FSTYPE,MOUNTPOINT | awk '{if (NF == 3) print "\033[31m" $0 "\033[0m"; else print}'
     fi
 }
+nvimclean() {
+    rm -r ~/.cache/nvim && echo "Cleaned ~/.cache/nvim"
+    rm -rf ~/.local/share/nvim && echo "Cleaned ~/.local/share/nvim"
+    rm -r ~/.local/state/nvim && echo "Cleaned ~/.local/state/nvim"
+}
 
 
 
