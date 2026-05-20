@@ -1,12 +1,7 @@
--- Hyprland config migrated from hyprlang (0.54) to Lua (0.55)
--- Place at: ~/.config/hypr/hyprland.lua
--- See https://wiki.hypr.land/Configuring/Start/
-
 ------------------
 ---- MONITORS ----
 ------------------
 
--- "highrr" mode with auto position and scale (equivalent to monitor=,highrr,auto,auto)
 hl.monitor({
   output = "",
   mode = "preferred",
@@ -21,7 +16,6 @@ hl.monitor({
 local terminal = "alacritty"
 local webBrowser = "firefox"
 local fileManager = "thunar"
--- $HOME / $MAIN_DISPLAY were shell variables; use os.getenv() in Lua
 local menu = "wofi --show drun --term=alacritty --width=30% --height=50% --columns 1 -I"
 .. " -s " .. (os.getenv("HOME") or "") .. "/.config/wofi/themes/gruvbox.css"
 .. " -o " .. (os.getenv("MAIN_DISPLAY") or "")
@@ -30,7 +24,6 @@ local menu = "wofi --show drun --term=alacritty --width=30% --height=50% --colum
 ---- AUTOSTART ----
 -------------------
 
--- exec-once commands fire exactly once on startup (not on config reload)
 hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
   hl.exec_cmd("waybar")
@@ -58,7 +51,6 @@ hl.config({
     gaps_out = 0,
     border_size = 2,
     col = {
-      -- Two-colour gradient at 45°, matching your original rgba values
       active_border = { colors = { "rgba(d3c6aaff)", "rgba(565956ff)" }, angle = 45 },
       inactive_border = "rgba(2d353bff)",
     },
@@ -72,14 +64,12 @@ hl.config({
       enabled = true,
       size = 1,
       passes = 2,
-      new_optimizations = true, -- may be a no-op in 0.55; harmless to keep
       xray = true,
       special = true,
     },
     shadow = {
       enabled = false,
     },
-    -- Uncomment to re-enable the screen shader:
     -- screen_shader = (os.getenv("HOME") or "") .. "/.config/hypr/grayscale.glsl",
   },
 
@@ -132,14 +122,12 @@ hl.config({
   },
 })
 
--- Per-device override for the Dell touchpad
 hl.device({
   name = "dell07e6:00-06cb:76af-touchpad",
   accel_profile = "adaptive",
   sensitivity = 0,
 })
 
--- 3-finger horizontal swipe to change workspace
 hl.gesture({
   fingers = 3,
   direction = "horizontal",
@@ -150,7 +138,6 @@ hl.gesture({
 ---- WINDOW RULES ---
 ---------------------
 
--- Remove border when only one non-floating window is on a workspace
 hl.window_rule({
   name = "no-solo-border",
   match = {
