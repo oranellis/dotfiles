@@ -64,23 +64,30 @@ return {
   -- Treesitter
   {
     'nvim-treesitter/nvim-treesitter',
-    branch = 'master',
+    branch = 'main',
     lazy = false,
     build = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup({
-        modules = {},
-        ensure_installed = {},
-        ignore_install = {},
-        sync_install = true,
-        auto_install = true,
-        highlight = {
-          enable = true,
-          additional_vim_regex_highlighting = true,
-        },
-        indent = {
-          enable = true,
-        },
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function(ev)
+          local lang = vim.treesitter.language.get_lang(ev.match)
+          if not lang then return end
+
+          if vim.treesitter.highlighter.active[ev.buf] then return end
+
+          local ok, tsconfig = pcall(require, 'nvim-treesitter.config')
+          if ok then
+            local installed = tsconfig.get_installed()
+            local available = tsconfig.get_available()  -- full list nvim-treesitter knows about
+            if not vim.tbl_contains(installed, lang)
+              and vim.tbl_contains(available, lang) then  -- only install if it's a known language
+              require('nvim-treesitter').install({ lang })
+            end
+          end
+
+          pcall(vim.treesitter.start, ev.buf)
+          vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
       })
     end
   },
