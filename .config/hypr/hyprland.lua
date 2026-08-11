@@ -207,6 +207,9 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 -- Screenshot: Print → grim region grab
 hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)"'), { locked = true })
 
+-- Notification center
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw", {}))
+
 -------------------------------
 ---- LOCAL OVERRIDES ----------
 -------------------------------

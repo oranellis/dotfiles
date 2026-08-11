@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Files to exclude from the linking step
-EXCLUSIONS=".git README.md link.sh .gitignore .gitattributes backup"
+EXCLUSIONS=".git README.md link.sh .gitignore .gitattributes backup .config .local"
 # Files to copy to the home directory rather than link, must also be excluded above
 COPIES=".gitconfig"
 
 # Set variables for dotfiles directory
-GIT_DIR=$(dirname "$(readlink -f $0)")
+GIT_DIR=$(dirname "$(readlink -f "$0")")
 
 # Function to display help
 show_help() {
@@ -47,36 +47,42 @@ backup_if_exists() {
 
 	if [ -e "$file_path" ] && [ ! -L "$file_path" ] && [ "$MODE" == "link" ]; then
 		mkdir -p "$backup_dir"
-		mv "$file_path" "$backup_dir/$(basename "$file_path").old" && echo -e "\033[33mSaved   \033[0m$(basename "$file_path")"
+		mv "$file_path" "$backup_dir/$(basename "$file_path").old" &&
+			echo -e "\033[33mSaved   \033[0m$(basename "$file_path")"
 	fi
 }
 
 link_or_copy() {
-    local file=$1
-    local destination=$2
-    if [ "$MODE" = "copy" ]; then
-        # Check if destination is a symbolic link and remove it if it is
-        if [ -L "$destination" ]; then
-            rm "$destination" && echo -e "\033[31mRemoved \033[0m$(basename "$destination") link"
-        fi
-		if [ ! -e "$destination" ]; then
-			cp -r "$file" "$destination" && echo -e "\033[33mCopied  \033[0m$(basename "$file")"
+	local file=$1
+	local destination=$2
+
+	if [ "$MODE" = "copy" ]; then
+		# Check if destination is a symbolic link and remove it if it is
+		if [ -L "$destination" ]; then
+			rm "$destination" &&
+				echo -e "\033[31mRemoved \033[0m$(basename "$destination") link"
 		fi
-    else
-        mkdir -p "$(dirname "$destination")"
-        ln -sfn "$file" "$destination" && echo -e "\033[32mLinked  \033[0m$(basename "$file")"
-    fi
+
+		if [ ! -e "$destination" ]; then
+			cp -r "$file" "$destination" &&
+				echo -e "\033[33mCopied  \033[0m$(basename "$file")"
+		fi
+	else
+		mkdir -p "$(dirname "$destination")"
+		ln -sfn "$file" "$destination" &&
+			echo -e "\033[32mLinked  \033[0m$(basename "$file")"
+	fi
 }
 
 echo -e "Processing files from \033[35m$GIT_DIR\033[0m"
 
 # Scan all files in the git directory
-cd $HOME/
-MATCHES=$(ls -A $GIT_DIR)
+cd "$HOME" || exit 1
+MATCHES=$(ls -A "$GIT_DIR")
 
 # Iterate through the matches
 for MATCH in $MATCHES; do
-	if ! echo "$EXCLUSIONS $COPIES .config" | grep -w $MATCH > /dev/null; then
+	if ! echo "$EXCLUSIONS $COPIES" | grep -w "$MATCH" >/dev/null; then
 		# Backup existing files and then link or copy
 		backup_if_exists "./$MATCH" "$GIT_DIR/backup" "$MODE"
 		link_or_copy "$GIT_DIR/$MATCH" "./$MATCH"
@@ -87,19 +93,41 @@ done
 for COPY in $COPIES; do
 	if [ ! -f "$HOME/$COPY" ]; then
 		# Copy the file to the home folder
-		cp "$GIT_DIR/$COPY" "$HOME" && echo -e "\033[33mCopied  \033[0m$COPY"
+		cp "$GIT_DIR/$COPY" "$HOME" &&
+			echo -e "\033[33mCopied  \033[0m$COPY"
 	fi
 done
 
 # Handle .config directory separately
-mkdir -p $HOME/.config
-cd $HOME/.config
-MATCHES=$(ls -A $GIT_DIR/.config)
+mkdir -p "$HOME/.config"
+cd "$HOME/.config" || exit 1
+MATCHES=$(ls -A "$GIT_DIR/.config")
 
 for MATCH in $MATCHES; do
-	if ! echo "$EXCLUSIONS $COPIES" | grep -w $MATCH > /dev/null; then
+	if ! echo "$EXCLUSIONS $COPIES" | grep -w "$MATCH" >/dev/null; then
 		# Backup existing files and then link or copy
 		backup_if_exists "./$MATCH" "$GIT_DIR/backup/.config" "$MODE"
 		link_or_copy "$GIT_DIR/.config/$MATCH" "./$MATCH"
 	fi
 done
+
+# Handle .local separately.
+# Keep ~/.local and its subdirectories as real directories, but link each
+# individual file from the dotfiles repo.
+
+while IFS= read -r -d '' FILE; do
+	# Path relative to the repo's .local directory
+	RELATIVE_PATH="${FILE#"$GIT_DIR/.local/"}"
+
+	DESTINATION="$HOME/.local/$RELATIVE_PATH"
+	BACKUP_DIR="$GIT_DIR/backup/.local/$(dirname "$RELATIVE_PATH")"
+
+	# Make sure the destination directory exists
+	mkdir -p "$(dirname "$DESTINATION")"
+
+	# Backup an existing non-symlink file
+	backup_if_exists "$DESTINATION" "$BACKUP_DIR" "$MODE"
+
+	# Link or copy the individual file
+	link_or_copy "$FILE" "$DESTINATION"
+done < <(find "$GIT_DIR/.local" \( -type f -o -type l \) -print0)
