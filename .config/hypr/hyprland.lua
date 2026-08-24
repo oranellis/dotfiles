@@ -15,6 +15,7 @@ hl.monitor({
 
 local terminal = "alacritty"
 local webBrowser = "firefox"
+local webBrowserAlt = "firefox -P default-release"
 local fileManager = "thunar"
 local menu = "wofi --show drun --term=alacritty --width=30% --height=50% --columns 1 -I"
 .. " -s " .. (os.getenv("HOME") or "") .. "/.config/wofi/themes/gruvbox.css"
@@ -156,9 +157,13 @@ local mainMod = "SUPER"
 -- Applications
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(webBrowser))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(webBrowserAlt))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+
+-- Notification center
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw", {}))
 
 -- Window management
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
@@ -206,9 +211,6 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 -- Screenshot: Print → grim region grab
 hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)"'), { locked = true })
-
--- Notification center
-hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw", {}))
 
 -------------------------------
 ---- LOCAL OVERRIDES ----------
