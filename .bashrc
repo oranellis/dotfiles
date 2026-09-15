@@ -39,8 +39,9 @@ export NVM_DIR="$HOME/.nvm"
 
 HISTCONTROL=ignoreboth
 shopt -s histappend # append to the history file, don't overwrite it
-HISTSIZE=1000
-HISTFILESIZE=50000
+HISTSIZE=10000
+HISTFILESIZE=1000000
+systemd-run --user --quiet --no-block --collect --property=Nice=10 $HOME/.local/bin/cleanup-bash-history
 
 
 

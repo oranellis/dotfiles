@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+HISTORY_FILE="${HISTFILE:-$HOME/.bash_history}"
+HISTORY_COMMENT_CHAR="${HISTORY_COMMENT_CHAR:-#}"
+
+[[ -s "$HISTORY_FILE" ]] || exit 0
+
+if [[ ${#HISTORY_COMMENT_CHAR} -ne 1 ]]; then
+	echo "HISTORY_COMMENT_CHAR must be exactly one character" >&2
+	exit 1
+fi
+
+LOCK_DIR="${HISTORY_FILE}.cleanup.lock"
+TMP_FILE=""
+
+acquire_lock() {
+	if mkdir "$LOCK_DIR" 2>/dev/null; then
+		printf '%s\n' "$$" >"$LOCK_DIR/pid"
+		return
+	fi
+
+	if [[ -r "$LOCK_DIR/pid" ]]; then
+		read -r lock_pid <"$LOCK_DIR/pid" || lock_pid=""
+
+		if [[ "$lock_pid" =~ ^[0-9]+$ ]] &&
+			kill -0 "$lock_pid" 2>/dev/null; then
+			exit 0
+		fi
+	fi
+
+	rm -rf "$LOCK_DIR"
+
+	mkdir "$LOCK_DIR" 2>/dev/null || exit 0
+	printf '%s\n' "$$" >"$LOCK_DIR/pid"
+}
+
+cleanup() {
+	[[ -n "$TMP_FILE" && -f "$TMP_FILE" ]] && rm -f "$TMP_FILE"
+	rm -rf "$LOCK_DIR"
+}
+
+trap cleanup EXIT HUP INT TERM
+
+acquire_lock
+
+umask 077
+TMP_FILE=$(mktemp "${HISTORY_FILE}.tmp.XXXXXX")
+
+awk -v comment_char="$HISTORY_COMMENT_CHAR" '
+function is_timestamp(line) {
+	return substr(line, 1, 1) == comment_char &&
+	       substr(line, 2) ~ /^[0-9]+$/
+}
+
+function add_record(ts, text, has_timestamp, idx) {
+	idx = ++record_count
+
+	timestamp[idx] = ts
+	entry[idx] = text
+	stamped[idx] = has_timestamp
+
+	last_occurrence[text] = idx
+}
+
+{
+	line = $0
+
+	if (is_timestamp(line)) {
+		if (in_timestamp_entry)
+			add_record(current_timestamp, current_entry, 1)
+
+		current_timestamp = line
+		current_entry = ""
+		have_entry_line = 0
+		in_timestamp_entry = 1
+
+		next
+	}
+
+	if (in_timestamp_entry) {
+		if (have_entry_line)
+			current_entry = current_entry ORS line
+		else {
+			current_entry = line
+			have_entry_line = 1
+		}
+	} else {
+		# Untimestamped history cannot reliably distinguish multiline entries.
+		add_record("", line, 0)
+	}
+}
+
+END {
+	if (in_timestamp_entry)
+		add_record(current_timestamp, current_entry, 1)
+
+	for (i = 1; i <= record_count; i++) {
+		if (last_occurrence[entry[i]] != i)
+			continue
+
+		if (stamped[i])
+			print timestamp[i]
+
+		print entry[i]
+	}
+}
+' "$HISTORY_FILE" >"$TMP_FILE"
+
+mv "$TMP_FILE" "$HISTORY_FILE"
+TMP_FILE=""

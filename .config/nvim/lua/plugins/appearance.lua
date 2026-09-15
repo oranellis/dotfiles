@@ -5,7 +5,7 @@ return {
     priority = 1000,
     config = true,
     opts = {
-      transparent_mode = true -- true to make terminal background show through
+      transparent_mode = false
     }
   },
 
