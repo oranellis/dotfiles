@@ -212,6 +212,9 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 -- Screenshot: Print → grim region grab
 hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)"'), { locked = true })
 
+-- Voxtype
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("voxtype record toggle"), { locked = true })
+
 -------------------------------
 ---- LOCAL OVERRIDES ----------
 -------------------------------
