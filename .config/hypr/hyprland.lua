@@ -111,6 +111,7 @@ hl.animation({ leaf = "global", enabled = true, speed = 4, bezier = "default" })
 hl.config({
   input = {
     kb_layout = "gb",
+    kb_options = "caps:none",
     repeat_delay = 200,
     repeat_rate = 30,
     sensitivity = -0.5,
@@ -213,7 +214,9 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)"'), { locked = true })
 
 -- Voxtype
-hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("voxtype record toggle"), { locked = true })
+hl.bind("code:66", hl.dsp.exec_cmd("voxtype record start"))
+hl.bind("code:66", hl.dsp.exec_cmd("voxtype record stop"), { release = true })
+hl.bind("SHIFT + code:66", hl.dsp.exec_cmd("voxtype record toggle"))
 
 -------------------------------
 ---- LOCAL OVERRIDES ----------
