@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Network Manager
+GenericName=Network Configuration
+Comment=Manage network connections
+Icon=network-wireless
+Exec=alacritty --class nmtui --title "Network Manager" -e nmtui
+Terminal=false
+StartupNotify=true
+Categories=Network;
+Keywords=wifi;network;nmtui;connection;

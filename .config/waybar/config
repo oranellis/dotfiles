@@ -24,6 +24,7 @@
 
     "network": {
         "interval": 60,
+        "on-click": "gtk-launch nmtui",
         "format": "{ifname} connected",
         "format-wifi": "{icon}   {essid}",
         "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨" ],
