@@ -8,6 +8,11 @@
 	"margin": 14,
     "spacing": 5,
 
+    "tray": {
+        "icon-size": 24,
+        "spacing": 6
+    },
+
 	"battery": {
 		"format": "{icon}   {capacity}%",
 		"format-charging": "{icon}󱐋  {capacity}%",

@@ -17,6 +17,10 @@ tooltip {
   border: 1px solid #d3c6aa;
 }
 
+#tray {
+  padding: 0;
+}
+
 #clock, #battery {
   padding: 0 10px;
 }
