@@ -8,6 +8,8 @@
 window#waybar {
     background: #101010;
     color: #d3c6aa;
+    /* Same dimmed shade as the inactive workspace numerals */
+    border: 3px solid #6b6659;
     border-radius: 10px;
     /* Height comes from the config's "height" key, not from padding here.
 Edge separation comes from the .modules-* margins below, padding on the
