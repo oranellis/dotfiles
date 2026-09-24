@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# Drive the persistent Waybar instance, which lives on the overlay layer and
+# starts hidden.
+#
+#   waybar-overlay start   launch it (hidden) if it is not already running
+#   waybar-overlay show    make it visible
+#   waybar-overlay hide    make it invisible
+#
+# Waybar only offers a toggle (SIGUSR1), so show/hide first read the current
+# visibility from hyprctl and only signal when the state is actually wrong.
+# That keeps the bar in sync with the key being held even if a signal is missed.
+
+set -euo pipefail
+
+CONFIG="$HOME/.config/waybar/config"
+STYLE="$HOME/.config/waybar/style.css"
+
+# Launching with explicit paths gives pgrep/pkill an exact pattern to match.
+MATCH="waybar -c $CONFIG"
+
+usage() {
+	echo "usage: $(basename "$0") start|show|hide" >&2
+	exit 1
+}
+
+is_running() {
+	pgrep -f "$MATCH" >/dev/null
+}
+
+start_bar() {
+	waybar -c "$CONFIG" -s "$STYLE" >/dev/null 2>&1 &
+	disown
+}
+
+# Number of our layer surfaces on the overlay level (3). A hidden bar is not
+# unmapped, it drops to the bottom level (1), so this is 0 while it is
+# invisible. Waybar names the surface after the bar, so this must match the
+# "name" set in the waybar config.
+NAMESPACE="overlay-bar"
+
+visible_surfaces() {
+	hyprctl layers -j |
+		jq --arg ns "$NAMESPACE" '[.[].levels["3"][]? | select(.namespace == $ns)] | length'
+}
+
+# Give a freshly launched bar a moment to map before signalling it.
+wait_for_bar() {
+	for _ in {1..20}; do
+		is_running && return 0
+		sleep 0.1
+	done
+	return 1
+}
+
+[[ $# -eq 1 ]] || usage
+WANT=$1
+
+case "$WANT" in
+	start)
+		is_running || start_bar
+		exit 0
+		;;
+	show | hide) ;;
+	*)
+		usage
+		;;
+esac
+
+if ! is_running; then
+	start_bar
+	wait_for_bar || exit 1
+	sleep 0.3
+fi
+
+VISIBLE=$(visible_surfaces)
+
+if [[ $WANT == show && $VISIBLE -eq 0 ]] || [[ $WANT == hide && $VISIBLE -gt 0 ]]; then
+	pkill -SIGUSR1 -f "$MATCH"
+fi

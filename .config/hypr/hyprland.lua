@@ -17,6 +17,7 @@ local terminal = "alacritty"
 local webBrowser = "firefox"
 local webBrowserAlt = "firefox -P default-release"
 local fileManager = "thunar"
+local overlayBar = (os.getenv("HOME") or "") .. "/.local/bin/waybar-overlay"
 local menu = "wofi --show drun --term=alacritty --width=30% --height=50% --columns 1 -I"
 .. " -s " .. (os.getenv("HOME") or "") .. "/.config/wofi/themes/gruvbox.css"
 .. " -o " .. (os.getenv("MAIN_DISPLAY") or "")
@@ -27,7 +28,7 @@ local menu = "wofi --show drun --term=alacritty --width=30% --height=50% --colum
 
 hl.on("hyprland.start", function()
   hl.exec_cmd("hyprpaper")
-  hl.exec_cmd("waybar")
+  hl.exec_cmd(overlayBar .. " start")
   hl.exec_cmd("swaync")
   hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
 end)
@@ -162,6 +163,13 @@ hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(webBrowserAlt))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+
+-- Status bar overlay: visible only while the meta key is held
+hl.bind("Super_L", hl.dsp.exec_cmd(overlayBar .. " show"))
+-- ignore_mods so the release still fires while the modifier is held.
+-- transparent so a combo such as SUPER + W cannot shadow it.
+hl.bind("Super_L", hl.dsp.exec_cmd(overlayBar .. " hide"),
+	{ release = true, ignore_mods = true, transparent = true })
 
 -- Notification center
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw", {}))

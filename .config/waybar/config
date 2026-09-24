@@ -1,7 +1,10 @@
 {
-	"name": "desktop-bar",
+	// Also becomes the layer-shell namespace, which waybar-overlay matches on
+	"name": "overlay-bar",
 	"exclusive": false,
-	"layer": "bottom",
+	// Drawn above windows, but hidden until ~/.local/bin/waybar-overlay shows it
+	"layer": "overlay",
+	"start_hidden": true,
 	"position": "right",
 
 	"modules-right": ["tray", "backlight", "battery", "pulseaudio", "network", "clock"],
