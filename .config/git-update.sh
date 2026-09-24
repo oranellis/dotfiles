@@ -6,8 +6,8 @@ else
   commit_msg="$*"
 fi
 
-local has_remote
-if [ -n "$(git remote)"]; then
+has_remote=""
+if [ -n "$(git remote)" ]; then
   has_remote="y"
 fi
 
