@@ -5,11 +5,36 @@
 	// Drawn above windows, but hidden until ~/.local/bin/waybar-overlay shows it
 	"layer": "overlay",
 	"start_hidden": true,
-	"position": "right",
+	"position": "bottom",
+	// 50% of eDP-1's 1920 logical px, fixed rather than proportional
+	"width": 960,
+	// Waybar sizes the surface itself, CSS padding on the window will not do it
+	"height": 48,
 
-	"modules-right": ["tray", "backlight", "battery", "pulseaudio", "network", "clock"],
+	"modules-left": ["hyprland/workspaces"],
+	"modules-right": ["tray", "network", "battery", "backlight", "pulseaudio", "clock"],
 	"margin": 14,
-    "spacing": 5,
+    "spacing": 0,
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        // Japanese numerals. These are full width CJK glyphs, so they are
+        // already uniform, the min-width in style.css just sets the spacing.
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "10": "十",
+            "default": "•"
+        },
+        "on-click": "activate"
+    },
 
     "tray": {
         "icon-size": 24,
@@ -33,12 +58,17 @@
     "network": {
         "interval": 60,
         "on-click": "gtk-launch nmtui",
-        "format": "{ifname} connected",
-        "format-wifi": "{icon}   {essid}",
+        // Short label only, the network name lives in the tooltip
+        "format": "{ifname}",
+        "format-wifi": "{icon}   WiFi",
         "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨" ],
-        "format-ethernet": "󰈀   connected",
-        "format-disconnected": "󰲛   disconnected",
-        "tooltip": false
+        "format-ethernet": "󰈀   Eth",
+        "format-disconnected": "󰲛   Off",
+        "tooltip": true,
+        "tooltip-format": "{ifname}",
+        "tooltip-format-wifi": "{essid}   {signalStrength}%",
+        "tooltip-format-ethernet": "{ifname} connected",
+        "tooltip-format-disconnected": "Disconnected"
     },
 
     "pulseaudio": {

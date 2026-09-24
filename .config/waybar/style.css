@@ -1,51 +1,91 @@
 * {
-  border: none;
-  font-family: Hack-Nerd;
-  font-size: 16px;
-  min-height: 0;
-  color: #d3c6aa;
-  opacity: 0.85;
+    border: none;
+    font-family: Hack-Nerd;
+    font-size: 18px;
+    min-height: 0;
 }
 
 window#waybar {
-  background: rgba(0, 0, 0, 0);
-  color: white;
+    background: #101010;
+    color: #d3c6aa;
+    border-radius: 10px;
+    /* Height comes from the config's "height" key, not from padding here.
+Edge separation comes from the .modules-* margins below, padding on the
+window itself has no effect */
+    padding: 0;
+}
+
+tooltip, tooltip label {
+    background: #1a1813;
+    font-size: 14px;
 }
 
 tooltip {
-  background: #161b1e;
-  border: 1px solid #d3c6aa;
+    border: 1px solid #d3c6aa;
+}
+
+.modules-left {
+    margin-left: 6px;
+}
+
+.modules-right {
+    margin-right: 6px;
 }
 
 #tray {
-  padding: 0;
+    padding: 0;
 }
 
-#clock, #battery {
-  padding: 0 10px;
+#network, #battery, #backlight, #pulseaudio {
+    padding: 0 8px;
 }
 
 #clock {
-  font-size: 64px;
+    padding: 0 6px;
+    font-size: 36px;
+    margin-bottom: 4px;
+}
+
+/* min-width sets the slot each numeral sits in */
+#workspaces button {
+    padding: 0;
+    min-width: 34px;
+    background: transparent;
+}
+
+#workspaces button,
+#workspaces button label {
+    color: #6b6659;
+    font-size: 20px;
+}
+
+#workspaces button.active,
+#workspaces button.active label {
+    color: #ffffff;
+}
+
+#workspaces button.urgent,
+#workspaces button.urgent label {
+    color: #ff6699;
 }
 
 #battery.charging {
-  color: lime;
+    color: lime;
 }
 
 @keyframes blink {
 to {
-  background-color: #ffffff;
-  color: black;
+    background-color: #ffffff;
+    color: black;
 }
 }
 
 #battery.warning:not(.charging) {
-  background: #f53c3c;
-  color: white;
-  animation-name: blink;
-  animation-duration: 0.5s;
-  animation-timing-function: steps(12);
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+    background: #f53c3c;
+    color: white;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
