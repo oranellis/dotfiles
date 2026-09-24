@@ -9,11 +9,12 @@
 	// 50% of eDP-1's 1920 logical px, fixed rather than proportional
 	"width": 960,
 	// Waybar sizes the surface itself, CSS padding on the window will not do it
-	"height": 48,
+	"height": 44,
 
 	"modules-left": ["hyprland/workspaces"],
 	"modules-right": ["tray", "network", "battery", "backlight", "pulseaudio", "clock"],
-	"margin": 14,
+	// Flush with the bottom edge, no floating gap
+	"margin-bottom": 0,
     "spacing": 0,
 
     "hyprland/workspaces": {

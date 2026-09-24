@@ -6,11 +6,13 @@
 }
 
 window#waybar {
-    background: #101010;
+    background: #000000;
     color: #d3c6aa;
-    /* Same dimmed shade as the inactive workspace numerals */
+    /* Same dimmed shade as the inactive workspace numerals. No bottom edge or
+       bottom radius, so the sides run straight off the screen */
     border: 3px solid #6b6659;
-    border-radius: 10px;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
     /* Height comes from the config's "height" key, not from padding here.
 Edge separation comes from the .modules-* margins below, padding on the
 window itself has no effect */
@@ -26,12 +28,18 @@ tooltip {
     border: 1px solid #d3c6aa;
 }
 
+/* Equal and opposite margins shift the modules down without asking for more
+   height, which would push the bar taller than the configured 44 */
 .modules-left {
     margin-left: 6px;
+    margin-top: 2px;
+    margin-bottom: -2px;
 }
 
 .modules-right {
     margin-right: 6px;
+    margin-top: 2px;
+    margin-bottom: -2px;
 }
 
 #tray {
@@ -45,7 +53,9 @@ tooltip {
 #clock {
     padding: 0 6px;
     font-size: 36px;
-    margin-bottom: 4px;
+    /* Lift 2px, the negative top keeps it from adding to the bar height */
+    margin-bottom: 2px;
+    margin-top: -2px;
 }
 
 /* min-width sets the slot each numeral sits in */
