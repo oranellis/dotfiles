@@ -1,24 +1,19 @@
 {
-	// Also becomes the layer-shell namespace, which waybar-overlay matches on
-	"name": "overlay-bar",
-	"exclusive": false,
-	// Drawn above windows, but hidden until ~/.local/bin/waybar-overlay shows it
-	"layer": "overlay",
-	"start_hidden": true,
+	"name": "bar",
+	"layer": "top",
 	"position": "bottom",
-	// 50% of eDP-1's 1920 logical px, fixed rather than proportional
-	"width": 960,
-	// Waybar sizes the surface itself, CSS padding on the window will not do it
-	"height": 44,
+	// Reserve space so windows tile above the bar
+	"exclusive": true,
+	"height": 34,
 
 	"modules-left": ["hyprland/workspaces"],
 	"modules-right": ["tray", "network", "battery", "backlight", "pulseaudio", "clock"],
-	// Flush with the bottom edge, no floating gap
-	"margin-bottom": 0,
     "spacing": 0,
 
     "hyprland/workspaces": {
         "format": "{icon}",
+        // Always show all ten so empty ones can be styled dim
+        "persistent-workspaces": { "*": 10 },
         // Japanese numerals. These are full width CJK glyphs, so they are
         // already uniform, the min-width in style.css just sets the spacing.
         "format-icons": {
@@ -38,7 +33,7 @@
     },
 
     "tray": {
-        "icon-size": 24,
+        "icon-size": 18,
         "spacing": 6
     },
 
