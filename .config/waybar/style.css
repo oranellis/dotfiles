@@ -24,17 +24,10 @@ tooltip {
 }
 
 /* Equal and opposite margins shift the modules down without asking for more
-   height, which would push the bar taller than the configured 32 */
-.modules-left {
-    margin-left: 6px;
-    margin-top: 2px;
-    margin-bottom: -2px;
-}
-
+   height, which would push the bar taller than the configured one */
 .modules-right {
-    margin-right: 6px;
-    margin-top: 2px;
-    margin-bottom: -2px;
+    margin-top: 1px;
+    margin-bottom: -1px;
 }
 
 #tray {
@@ -46,11 +39,12 @@ tooltip {
 }
 
 #clock {
-    padding: 0 6px;
-    font-size: 24px;
-    /* Lift 2px, the negative top keeps it from adding to the bar height */
-    margin-bottom: 2px;
-    margin-top: -2px;
+    padding: 0 12px 0 6px;
+    font-size: 18px;
+    font-weight: bold;
+    /* Lift 1px, the negative top keeps it from adding to the bar height */
+    margin-bottom: 1px;
+    margin-top: -1px;
 }
 
 /* min-width sets the slot each numeral sits in */

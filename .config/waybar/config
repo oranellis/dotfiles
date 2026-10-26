@@ -4,7 +4,7 @@
 	"position": "bottom",
 	// Reserve space so windows tile above the bar
 	"exclusive": true,
-	"height": 34,
+	"height": 26,
 
 	"modules-left": ["hyprland/workspaces"],
 	"modules-right": ["tray", "network", "battery", "backlight", "pulseaudio", "clock"],
