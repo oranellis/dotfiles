@@ -114,7 +114,7 @@ hl.config({
     kb_options = "caps:none",
     repeat_delay = 200,
     repeat_rate = 30,
-    sensitivity = -0.5,
+    sensitivity = 0,
     accel_profile = "flat",
     follow_mouse = 1,
     touchpad = {
@@ -122,12 +122,6 @@ hl.config({
       tap_to_click = false,
     },
   },
-})
-
-hl.device({
-  name = "dell07e6:00-06cb:76af-touchpad",
-  accel_profile = "adaptive",
-  sensitivity = 0,
 })
 
 hl.gesture({
