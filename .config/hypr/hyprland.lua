@@ -80,7 +80,6 @@ hl.config({
 
   dwindle = {
     smart_split = true,
-    special_scale_factor = 0.96,
   },
 
   misc = {
