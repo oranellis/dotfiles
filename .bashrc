@@ -189,7 +189,8 @@ nvimclean() {
     rm -r ~/.local/state/nvim && echo "Cleaned ~/.local/state/nvim"
 }
 pacman-autoremove() {
-    pacman -Qdtq | pacman -Rns -
+    echo -e "Executing the following:\n  pacman -Qdtq | sudo pacman -Rns -\n"
+    pacman -Qdtq | sudo pacman -Rns -
 }
 
 
