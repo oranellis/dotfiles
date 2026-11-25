@@ -32,7 +32,6 @@ export NVM_DIR="$HOME/.nvm"
 
 
 
-
 # ========================
 # === History Settings ===
 # ========================
@@ -140,12 +139,33 @@ bind 'set completion-ignore-case on'
 # === Convenience Aliases ===
 # ===========================
 
-alias ab=autobuild
-alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(date -I)"
-alias nd=mkdir
-alias nf=touch
 alias media="cd /run/media/$USER"
+alias ssh-keygen-named="ssh-keygen -t ed25519 -a 100 -C $(whoami)@$(uname -n)-$(date -I)"
 alias trash="gio trash"
+amount() {
+    if [ $# -ge 1 ]; then
+        blkdev="/dev/$(echo $1 | sed -e's/\/dev\///')"
+        udisksctl mount -b $blkdev
+    else
+        lsblk -lno NAME,SIZE,FSTYPE,MOUNTPOINT | awk '{if (NF == 3) print "\033[31m" $0 "\033[0m"; else print}'
+    fi
+}
+cdgit() {
+    cd "$(git rev-parse --show-toplevel)"
+}
+dotfiles() {
+    cd $(dirname $(readlink -f ~/.bashrc))
+}
+dockerclean() {
+    docker rm -f $(docker ps -aq)
+}
+dockernuke() {
+    # I know there are some redundant commands here
+    dockerclean
+    docker rmi $(docker images -aq)
+    docker system prune -af
+    docker volume prune -af
+}
 ds() {
     returndir=$(pwd)
     if [ "$#" -gt "0" ]
@@ -158,42 +178,18 @@ ds() {
     du -hd 1 2>/dev/null | sort -h
     cd "$returndir"
 }
-dotfiles() {
-    cd $(dirname $(readlink -f ~/.bashrc))
-}
-pacman-autoremove() {
-    pacman -Qdtq | pacman -Rns -
-}
-dockerclean() {
-    docker rm -f $(docker ps -aq)
-}
-dockernuke() {
-    # I know there are some redundant commands here
-    dockerclean
-    docker rmi $(docker images -aq)
-    docker system prune -af
-    docker volume prune -af
-}
-cdgit() {
-    cd "$(git rev-parse --show-toplevel)"
-}
 fixpermissions() {
     local dir="${1:-.}"
     find "$dir" -type d -exec chmod 755 {} \;
     find "$dir" -type f -exec chmod 644 {} \;
 }
-amount() {
-    if [ $# -ge 1 ]; then
-        blkdev="/dev/$(echo $1 | sed -e's/\/dev\///')"
-        udisksctl mount -b $blkdev
-    else
-        lsblk -lno NAME,SIZE,FSTYPE,MOUNTPOINT | awk '{if (NF == 3) print "\033[31m" $0 "\033[0m"; else print}'
-    fi
-}
 nvimclean() {
     rm -r ~/.cache/nvim && echo "Cleaned ~/.cache/nvim"
     rm -rf ~/.local/share/nvim && echo "Cleaned ~/.local/share/nvim"
     rm -r ~/.local/state/nvim && echo "Cleaned ~/.local/state/nvim"
+}
+pacman-autoremove() {
+    pacman -Qdtq | pacman -Rns -
 }
 
 
@@ -303,28 +299,6 @@ dc() {
 # ==================
 # === Nav Config ===
 # ==================
-
-y() {
-    if ! command -v yazi &>/dev/null
-    then
-        (
-        set -e
-        [ "$(uname -m)" != "x86_64" ] && return 1 # Platform guard clause
-        wget -O/tmp/yazi.zip https://github.com/sxyazi/yazi/releases/download/v0.3.3/yazi-x86_64-unknown-linux-gnu.zip
-        unzip -o /tmp/yazi.zip -d /tmp/yazi/
-        mkdir -p ~/.local/bin
-        cp /tmp/yazi/*/yazi ~/.local/bin
-        );
-    else
-        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-        yazi "$@" --cwd-file="$tmp"
-        if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
-        then
-            cd -- "$cwd"
-        fi
-        rm -f -- "$tmp"
-    fi
-}
 
 n() {
     if ! command -v mmm &>/dev/null
