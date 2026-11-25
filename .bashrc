@@ -355,7 +355,7 @@ archive() {
     fi
     size=$(du -sb --apparent-size --dereference "$src" 2>/dev/null | cut -f1)
     echo "Archiving ${size:+$(numfmt --to=iec --suffix=B "$size") }to $dest"
-    tar -C "$(dirname "$src")" -c "$(basename "$src")" | pv ${size:+-s "$size"} | pigz -Rc >"$dest"
+    tar --format=posix -C "$(dirname "$src")" -c "$(basename "$src")" | pv ${size:+-s "$size"} | pigz -Rc >"$dest"
     out_size=$(stat -c %s "$dest")
     if [ -n "$size" ] && [ "$size" -gt 0 ] && [ "$out_size" -gt 0 ]; then
         echo "$(numfmt --to=iec --suffix=B "$size") -> $(numfmt --to=iec --suffix=B "$out_size")" \
