@@ -96,11 +96,9 @@ shorten_path() {
     echo "$short_path"
 }
 
-if [ -n "$SSH_CLIENT" ]
-then
+if [ -n "$SSH_CLIENT" ]; then
     ssh_hostname="yes"
-elif [ -e "/.dockerenv" ]
-then
+elif [ -e "/.dockerenv" ]; then
     docker_hostname="yes"
 fi
 
@@ -168,10 +166,8 @@ dockernuke() {
 }
 ds() {
     returndir=$(pwd)
-    if [ "$#" -gt "0" ]
-    then
-        if ! cd $@ &>/dev/null
-        then
+    if [ "$#" -gt "0" ]; then
+        if ! cd $@ &>/dev/null; then
             echo "Bad directory argument" 1>&2
         fi
     fi
@@ -211,15 +207,13 @@ dc() {
     DC_SEARCH_FILE="devcontainer.json"
 
     dc_devcontainer_dir="$(pwd)"
-    if git status &>/dev/null
-    then
+    if git status &>/dev/null; then
         dc_devcontainer_dir="$(git rev-parse --show-toplevel)"
     fi
 
     cd "$dc_devcontainer_dir" || { echoerr "Failed to change directory"; return 1; }
 
-    if ! [ -d "./.devcontainer" ]
-    then
+    if ! [ -d "./.devcontainer" ]; then
         echoerr ".devcontainer directory not found"
         return 1
     fi
@@ -228,18 +222,15 @@ dc() {
     readarray -d '' dc_results < <(find ./.devcontainer -maxdepth 2 -name "$DC_SEARCH_FILE" -print0)
     dc_results_count=${#dc_results[@]}
 
-    if [ "$dc_results_count" -lt 1 ]
-    then
+    if [ "$dc_results_count" -lt 1 ]; then
         echoerr "No $DC_SEARCH_FILE found"
         return 1
     fi
 
-    if [ "$dc_results_count" -gt 1 ]
-    then
+    if [ "$dc_results_count" -gt 1 ]; then
         echo "Found multiple devcontainers, select from below:"
         dc_index=1
-        for f in "${dc_results[@]}"
-        do
+        for f in "${dc_results[@]}"; do
             echo -e "    $dc_index. $f"
             ((dc_index++))
         done
@@ -247,14 +238,12 @@ dc() {
         echo -n "Enter the file number to use: "
         read dc_input
 
-        if ! [[ "$dc_input" =~ ^[0-9]+$ ]]
-        then
+        if ! [[ "$dc_input" =~ ^[0-9]+$ ]]; then
             echoerr "Not a valid number"
             return 1
         fi
 
-        if [ "$dc_input" -lt 1 ] || [ "$dc_input" -gt "$dc_results_count" ]
-        then
+        if [ "$dc_input" -lt 1 ] || [ "$dc_input" -gt "$dc_results_count" ]; then
             echoerr "Number is out of bounds"
             return 1
         fi
@@ -263,19 +252,15 @@ dc() {
         dc_selected_path="${dc_results[0]}"
     fi
 
-    if command -v devcontainer &>/dev/null
-    then
-        if ! devcontainer exec --workspace-folder . --config "$dc_selected_path" "/usr/bin/true" &>/dev/null
-        then
-            if devcontainer exec --workspace-folder . --config "$dc_selected_path" "/usr/bin/true" 2>&1 | grep -q "Dev container config (.*) not found."
-            then
+    if command -v devcontainer &>/dev/null; then
+        if ! devcontainer exec --workspace-folder . --config "$dc_selected_path" "/usr/bin/true" &>/dev/null; then
+            if devcontainer exec --workspace-folder . --config "$dc_selected_path" "/usr/bin/true" 2>&1 | grep -q "Dev container config (.*) not found."; then
                 echo "Dev container config not found"
                 return 1
             fi
 
             echo -n "Building and starting dev container... "
-            if devcontainer up --workspace-folder . --config "$dc_selected_path" &>/tmp/devcontainerbuild.log
-            then
+            if devcontainer up --workspace-folder . --config "$dc_selected_path" &>/tmp/devcontainerbuild.log; then
                 echogreen "Done"
             else
                 echored "Failed"
@@ -302,8 +287,7 @@ dc() {
 # ==================
 
 n() {
-    if ! command -v mmm &>/dev/null
-    then
+    if ! command -v mmm &>/dev/null; then
         (
             set -e
             case "$(uname -m)" in
@@ -317,8 +301,7 @@ n() {
                     echo "unsupported architecture: $(uname -m)"
                     ;;
             esac
-            if [ -n "$filename" ]
-            then
+            if [ -n "$filename" ]; then
                 wget -q --show-progress -O/tmp/mmm.tar.gz "https://github.com/oranellis/mmm/releases/latest/download/$filename"
                 tar -xzf /tmp/mmm.tar.gz -C /tmp
                 mkdir -p ~/.local/bin
@@ -330,8 +313,7 @@ n() {
 
     mmm
 
-    if [ -f /tmp/mmm.path ]
-    then
+    if [ -f /tmp/mmm.path ]; then
         target_dir=$(< /tmp/mmm.path) # Read the file content into a variable
         cd "$target_dir" || echo "Failed to cd to $target_dir"
         rm -f /tmp/mmm.path # Delete the file
@@ -341,8 +323,7 @@ n() {
 export EDITOR="nvim"
 
 t() {
-    if command -v alacritty >/dev/null
-    then
+    if command -v alacritty >/dev/null; then
         alacritty &
     fi
 }
@@ -354,22 +335,32 @@ t() {
 # =========================
 
 archive() {
-    if [ $# -ne 2 ]
-    then
-        echo -e "requires two options: \n\tarchive [/input_path] [/output_path]\n\ncreates /output_path.tar.gz"
+    if [ $# -lt 1 ] || [ "$#" -gt 2 ]; then
+        echo -e "requires one or two options: \n\tarchive [/input_path] [/output_path]\n\ncreates /output_path.tar.gz, or ./input_name.tar.gz if no output path is given"
         return 1
     fi
-    if ! [ -d "$1" ]
-    then
+    if ! [ -d "$1" ]; then
         echo "input path must be a valid filesystem path"
         return 1
     fi
     local size
-    local src=$1
-    local dest=$2.tar.gz
+    local src
+    local dest
+    local out_size
+    src=$(realpath "$1") || return 1
+    if [ $# -eq 2 ]; then
+        dest=$2.tar.gz
+    else
+        dest=$(basename "$src").tar.gz
+    fi
     size=$(du -sb --apparent-size --dereference "$src" 2>/dev/null | cut -f1)
-    echo "Archiving $(numfmt --to=iec --suffix=B "$size") to $dest"
+    echo "Archiving ${size:+$(numfmt --to=iec --suffix=B "$size") }to $dest"
     tar -C "$(dirname "$src")" -c "$(basename "$src")" | pv ${size:+-s "$size"} | pigz -Rc >"$dest"
+    out_size=$(stat -c %s "$dest")
+    if [ -n "$size" ] && [ "$size" -gt 0 ] && [ "$out_size" -gt 0 ]; then
+        echo "$(numfmt --to=iec --suffix=B "$size") -> $(numfmt --to=iec --suffix=B "$out_size")" \
+        "$(awk -v a="$size" -v b="$out_size" 'BEGIN { printf "(%.2f:1, %.1f%% of original)", a/b, 100*b/a }')"
+    fi
 }
 
 
@@ -378,10 +369,10 @@ archive() {
 # === FZF Keybinds ===
 # ====================
 
-if command -v fzf &> /dev/null
-then
-    . /usr/share/fzf/key-bindings.bash
-    . /usr/share/fzf/completion.bash
+if command -v fzf &> /dev/null; then
+    for f in /usr/share{,/doc}/fzf{,/examples}/{key-bindings,completion}.bash; do
+        [ -f "$f" ] && . "$f"
+    done
 fi
 
 
@@ -391,31 +382,31 @@ fi
 # =======================
 
 colour-table() {
-for x in {0..8}; do
-    for i in {30..37}; do
-        for a in {40..47}; do
-            echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "
+    for x in {0..8}; do
+        for i in {30..37}; do
+            for a in {40..47}; do
+                echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "
+            done
+            echo
         done
-        echo
     done
-done
-echo ""
+    echo ""
 }
 
 colour-gradient() {
-awk 'BEGIN{
-s="/\\/\\/\\/\\/\\"; s=s s s s s s s s s s s s s s s s s s s s s s s;
-for (colnum = 0; colnum<256; colnum++) {
+    awk 'BEGIN{
+    s="/\\/\\/\\/\\/\\"; s=s s s s s s s s s s s s s s s s s s s s s s s;
+    for (colnum = 0; colnum<256; colnum++) {
     r = 255-(colnum*255/255);
     g = (colnum*510/255);
     b = (colnum*255/255);
     if (g>255) g = 510-g;
-        printf "\033[48;2;%d;%d;%dm", r,g,b;
-        printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
-        printf "%s\033[0m", substr(s,colnum+1,1);
+    printf "\033[48;2;%d;%d;%dm", r,g,b;
+    printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+    printf "%s\033[0m", substr(s,colnum+1,1);
     }
     printf "\n";
-}'
+    }'
 }
 
 
@@ -427,8 +418,8 @@ for (colnum = 0; colnum<256; colnum++) {
 # Source $HOME/.bashrc.d/*.sh scripts
 
 if test -d $HOME/.bashrc.d/; then
-	for profile in $HOME/.bashrc.d/*.sh; do
-		test -r "$profile" && . "$profile"
-	done
-	unset profile
+    for profile in $HOME/.bashrc.d/*.sh; do
+        test -r "$profile" && . "$profile"
+    done
+    unset profile
 fi
